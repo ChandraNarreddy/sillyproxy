@@ -8,7 +8,7 @@ SillyProxy is an advanced SNI (Server Name Indication) based TLS terminator for 
 * Favors ECDSA over RSA by default. ECDSA is in orders of magnitude cheaper than RSA
 * Supports both RSA and ECDSA type certificates for each domain it serves.
 * Has ability to dynamically load SNI configuration. Currently it loads Hostname+Cert config from keystore every 30 mins.
-* Makes use of [HTTPRouter](https://github.com/julienschmidt/httprouter) to route connections to proxy connections to backend.
+* Makes use of [HTTPRouter](https://github.com/julienschmidt/httprouter) to proxy connections to backend.
 * Allows to define Routes using a flexible JSON map.
 * Supports TLS versions 1.0, 1.1 and 1.2
 
