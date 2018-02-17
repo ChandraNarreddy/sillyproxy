@@ -1,11 +1,13 @@
+[![Build Status](https://travis-ci.org/ChandraNarreddy/sillyproxy.svg?branch=master)](https://travis-ci.org/ChandraNarreddy/sillyproxy)
+
 # SillyProxy
 
-SillyProxy is an advanced SNI (Server Name Indication) based TLS terminator for serving secure connections to multiple domains. It supports - 
+SillyProxy is an advanced SNI (Server Name Indication) based TLS terminator for serving secure connections to multiple domains.
 
 * SNI based TLS termination
 * Favors ECDSA over RSA by default. ECDSA is in orders of magnitude cheaper than RSA
 * Supports both RSA and ECDSA type certificates for each domain it serves.
-* Has ability to dynamically load SNI configuration. Currently it loads Hostname+Certificate configuration once every 30 mins.
+* Has ability to dynamically load SNI configuration. Currently it loads Hostname+Cert config from keystore every 30 mins.
 * Makes use of [HTTPRouter](https://github.com/julienschmidt/httprouter) to route connections to proxy connections to backend.
 * Allows to define Routes using a flexible JSON map.
 * Supports TLS versions 1.0, 1.1 and 1.2
@@ -38,7 +40,7 @@ SillyProxy allows you to generate a keystore using the 'keystore' argument and f
 * hostname - SNI alias against which this certificate needs to get associated. 
 
 ##### Default Certificate
-Please note that Silly needs atleast one cert (ECDSA or RSA) to be associated with "default" alias. The default certificate will be used to serve client connections that do not present an SNI extension or those with an unknown Hostname in SNI extension. If there was a primary domain that you served using Silly, the primary domain's certificate is best suited to be loaded under the "Default" alias. You are free to load the same set of certificates under the "Default" alias and under a different alias too.
+Please note that Silly needs atleast one cert (ECDSA or RSA) to be associated with "default" alias. The default certificate will be used to serve client connections that do not present an SNI extension or those with an unknown Hostname in SNI extension. If there is a primary domain that you want to serve using Silly, the primary domain's certificate is best suited to be loaded under the "Default" alias. You are free to load the same set of certificates under the "Default" alias and under a the actual alias too.
 
 ```
 ./sillyProxy -keystore myKeyStore.ks -pemCert certificatteFile -pemKey pvtKeyFile -keypass changeme -hostname myExternalDomainName keystore
@@ -47,7 +49,9 @@ Please note that Silly needs atleast one cert (ECDSA or RSA) to be associated wi
 ### Defining Routes
 
 Silly requires routes in a JSON format. Routes are defined in JSON arrays composed of 'Host' and RoutePaths combinations. Currently, Silly cannot override an inbound request's method when it proxies it over. The Method and Path attributes act as filters to capture inbound requests.
+
 Silly uses [HTTPRouter](https://github.com/julienschmidt/httprouter) under the hood, it requires the path element to be defined using HTTPRouter's syntax.
+
 The Route attribute is an array allows a combination of strings and numbers to be defined in a sequence to make up the proxy path for captured request. The numbers (indexed from 0) represent the respective parameter values that Silly extracts based on the Path that is defined for the route. Silly does a plain concatenation of the sequence and constructs the proxy path to be followed.
  
 ```
@@ -90,7 +94,7 @@ The Route attribute is an array allows a combination of strings and numbers to b
 ```
 
 ## Contributing
-Please submit issue for suggestion. Pull requests are welcome too.
+Please submit issues for suggestions. Pull requests are welcome too.
 
 ## Versioning
 
