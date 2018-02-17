@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	"./utility"
+	"github.com/ChandraNarreddy/sillyproxy/utility"
 )
 
 func main() {
