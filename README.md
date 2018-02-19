@@ -8,7 +8,7 @@ SillyProxy is an advanced SNI (Server Name Indication) based reverse proxy for t
 * Favors ECDSA over RSA by default. ECDSA is in orders of magnitude cheaper than RSA.
 * Supports both RSA and ECDSA type certificates for each domain it serves.
 * Has ability to dynamically load SNI configuration. Currently it loads Hostname+Cert config from keystore every 30 mins.
-* Makes use of [HTTPRouter](https://github.com/julienschmidt/httprouter) to proxy connections to backend.
+* Makes use of [httprouter](https://github.com/julienschmidt/httprouter) to proxy connections to backend.
 * Allows to define Routes using a flexible JSON map.
 * Supports TLS versions 1.0, 1.1 and 1.2
 
@@ -53,7 +53,7 @@ Please note that Silly needs atleast one cert+pvtkey entry (ECDSA or RSA type) t
 
 Silly requires routes in a JSON format. Routes are defined as JSON arrays and are composed of 'Host' to RoutePaths combinations. The 'Host' corresponds to the 'Host' header value of an incoming request. Please note that Silly cannot override an inbound request's method when it proxies a request. The Method and Path attributes act as filters to capture inbound requests.
 
-Silly uses [HTTPRouter](https://github.com/julienschmidt/httprouter) under the hood, it requires the path element to be defined using HTTPRouter's syntax.
+Silly uses [httprouter](https://github.com/julienschmidt/httprouter) under the hood, it requires the path element to be defined using HTTPRouter's syntax.
 
 The Route attribute needs an array composed of a combination of strings and numbers in the exact sequence that makes up the proxy path for inbound request. The numbers (indexed from 0) correspond to respective parameter values that Silly extracts based on the Path that you defined for the route. Silly does a plain concatenation in order as defined in the sequence and constructs the proxy path it needs to follow. Please note that Silly does a URL escape over parameters it extracts from the incoming request before composing the proxy path. String values defined in the Route attribute are not escaped.
  
@@ -385,9 +385,9 @@ Transfer rate per second:               1858.86 Byte/s (0.00 MByte/s)
 Errors:                 0       (0.00%)
 ```
 
-Silly's ECDSA performance is comparable to that of NGINX'. Silly's RSA performance compared to NGINX is abysmal; this is expected as GO's TLS library is not optimized for RSA performance. Ideally, you should use RSA certificate only as a fallback to serve clients that do not support ECDSA Signature Algorithm. Most modern browsers support ECDSA, so Silly's lacklustre RSA numbers should not matter much.
+Silly's ECDSA performance is comparable to that of NGINX' whereas Silly's RSA performance compared to NGINX' is abysmal; this is expected as GO's Crypto library is not optimized for RSA. Ideally, you should use RSA certificate only as a fallback to serve clients that do not support ECDSA Signature Algorithm. Most modern browsers support ECDSA, so Silly's lacklustre RSA number should cause minimal concern.
 
-## Authors
+## Author
 
 * **Chandrakanth Narreddy**
 
@@ -397,6 +397,6 @@ MIT License
 
 ## Acknowledgments
 
-* Julien Schmidt for [HTTPRouter](https://github.com/julienschmidt/httprouter)
+* Julien Schmidt for [httprouter](https://github.com/julienschmidt/httprouter)
 * Pavel Chernykh for [keystore-go](https://github.com/pavel-v-chernykh/keystore-go)
 * Awesome authors of Golang's TLS library
