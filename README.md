@@ -393,6 +393,7 @@ Silly's ECDSA performance is comparable to that of NGINX'. Silly's RSA performan
 
 ## License
 
+MIT License
 
 ## Acknowledgments
 
