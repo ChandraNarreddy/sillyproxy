@@ -2,7 +2,7 @@
 
 # SillyProxy
 
-SillyProxy is an advanced SNI (Server Name Indication) based TLS terminator for secure proxying connections to multiple domains.
+SillyProxy is an advanced SNI (Server Name Indication) based reverse proxy for terminating and proxying HTTPS connections to multiple domains.
 
 * SNI based TLS termination
 * Favors ECDSA over RSA by default. ECDSA is in orders of magnitude cheaper than RSA.
@@ -46,7 +46,7 @@ A keystore can be used to store keys and certificates for multiple hostnames. Ea
 Please note that Silly needs atleast one cert+pvtkey entry (ECDSA or RSA type) to be associated using a "default" alias. This default entry will be used to serve clients that do not support SNI extension or those with an unknown Hostname in SNI extension. If there is a primary domain that you want to serve using Silly, the primary domain's certificate is best suited as "Default" entry. You are free to load the same certificate under the "Default" alias and under an actual alias too.
 
 ```
-./sillyProxy -keystore myKeyStore.ks -pemCert certificatteFile -pemKey pvtKeyFile -keypass changeme -hostname myExternalDomainName keystore
+./sillyProxy -keystore myKeyStore.ks -pemCert certificatteFile -pemKey pvtKeyFile -keypass changeme -hostname myExternalDomainName KeyStore
 ``` 
 
 ### Defining Routes
@@ -55,7 +55,7 @@ Silly requires routes in a JSON format. Routes are defined as JSON arrays and ar
 
 Silly uses [HTTPRouter](https://github.com/julienschmidt/httprouter) under the hood, it requires the path element to be defined using HTTPRouter's syntax.
 
-The Route attribute needs an array composed of a combination of strings and numbers in a sequence to make up proxy path for the inbound request. The numbers (indexed from 0) correspond to the respective parameter values that Silly extracts based on the Path that is defined for the route. Silly does a plain concatenation of the sequence and constructs the proxy path it needs to follow. Please note that Silly does a URL escape over parameters it extracts from the incoming request before composing the proxy path. String values defined in the Route attribute are not escaped.
+The Route attribute needs an array composed of a combination of strings and numbers in the exact sequence that makes up the proxy path for inbound request. The numbers (indexed from 0) correspond to respective parameter values that Silly extracts based on the Path that you defined for the route. Silly does a plain concatenation in order as defined in the sequence and constructs the proxy path it needs to follow. Please note that Silly does a URL escape over parameters it extracts from the incoming request before composing the proxy path. String values defined in the Route attribute are not escaped.
  
 ```
 {	
@@ -106,7 +106,7 @@ GCE n1-standard-1 (1 vCPU, 3.75 GB memory) running ubuntu-1710-artful-v20180126
 Linux instance-2 4.13.0-32-generic #35-Ubuntu SMP Thu Jan 25 09:13:46 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 GO version go1.9.1 linux/amd64
 
-To reduce network induced variations, we used:
+To reduce network induced variations, I used:
 * A backend HTTP server implementation (using GO 1.9.1) serving a minimum payload on the target machine. 
 * Go-WRK run from the target machine to avoid network related variations in the benchmark.
 * Silly was configured with RSA and ECDSA entries for connections to the localhost.
@@ -397,5 +397,5 @@ Silly's ECDSA performance is comparable to that of NGINX'. Silly's RSA performan
 ## Acknowledgments
 
 * Julien Schmidt for [HTTPRouter](https://github.com/julienschmidt/httprouter)
-* Pavel Chernykh for [keystore-go](github.com/pavel-v-chernykh/keystore-go)
+* Pavel Chernykh for [keystore-go](https://github.com/pavel-v-chernykh/keystore-go)
 * Awesome authors of Golang's TLS library
