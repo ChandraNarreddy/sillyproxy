@@ -102,13 +102,14 @@ Please submit issues for suggestions. Pull requests are welcome too.
 ## Benchmarks
 
 Target platform:
-GCE n1-standard-1 (1 vCPU, 3.75 GB memory) running ubuntu-1710-artful-v20180126
-Linux instance-2 4.13.0-32-generic #35-Ubuntu SMP Thu Jan 25 09:13:46 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
-GO version go1.9.1 linux/amd64
 
-To reduce network induced variations, I used:
+* GCE n1-standard-1 (1 vCPU, 3.75 GB memory) running ubuntu-1710-artful-v20180126
+* Linux instance-2 4.13.0-32-generic #35-Ubuntu SMP Thu Jan 25 09:13:46 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+* GO version go1.9.1 linux/amd64
+
+To minimize network induced variations, I used:
 * A backend HTTP server implementation (using GO 1.9.1) serving a minimum payload on the target machine. 
-* Go-WRK run from the target machine to avoid network related variations in the benchmark.
+* Go-WRK run from the target machine.
 * Silly was configured with RSA and ECDSA entries for connections to the localhost.
 
 #### SillyProxy Curve P-256 ECDSA performance
