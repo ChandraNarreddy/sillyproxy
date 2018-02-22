@@ -96,9 +96,6 @@ The Route attribute needs an array composed of a combination of strings and numb
 }
 ```
 
-## Contributing
-Please submit issues for suggestions. Pull requests are welcome too.
-
 ## Benchmarks
 
 Target platform:
@@ -387,6 +384,9 @@ Errors:                 0       (0.00%)
 ```
 
 Silly's ECDSA performance is comparable to that of NGINX' whereas Silly's RSA performance compared to NGINX' is abysmal; this is expected as GO's Crypto library is not optimized for RSA. Ideally, you should use RSA certificate only as a fallback to serve clients that do not support ECDSA Signature Algorithm. Most modern browsers support ECDSA, so Silly's lacklustre RSA number should cause minimal concern.
+
+## Contributing
+Please submit issues for suggestions. Pull requests are welcome too.
 
 ## Author
 
