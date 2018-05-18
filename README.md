@@ -14,11 +14,11 @@ SillyProxy is an advanced SNI (Server Name Indication) respecting reverse proxy 
 
 ## Getting Started
 
-You can build SillyProxy for your platform using Go-1.8 or above.
+You can build Silly for your platform using Go-1.8 or above.
 ```
 go get https://github.com/ChandraNarreddy/sillyproxy
 ```
-Once installed, sillyproxy can be invoked by passing these parameters -
+Once installed, Silly can be invoked by passing these parameters -
 
 * keystore - location of the keystore file. More on how to generate one below.
 * keypass - password to open the keystore file
@@ -32,7 +32,7 @@ Once installed, sillyproxy can be invoked by passing these parameters -
 
 ### Generating the keystore
 
-SillyProxy reads certificates and keys from the keystore file. You can generate a keystore using the 'keystore' argument and following parameters - 
+Silly reads certificates and keys from the keystore file. You can generate a keystore using the 'keystore' argument and following parameters - 
 
 * keystore - location of the keystore file. If this keystore does not exist yet, a new one is created.
 * keypass - password to secure the keystore. Must match the previous password for an existing keystore
