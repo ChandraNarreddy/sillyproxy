@@ -2,14 +2,14 @@
 
 # SillyProxy
 
-SillyProxy is an advanced SNI (Server Name Indication) based reverse proxy for terminating and proxying HTTPS connections to multiple domains.
+SillyProxy is an advanced SNI (Server Name Indication) respecting reverse proxy for terminating and proxying HTTPS connections to multiple domains.
 
-* SNI based TLS termination
-* Favors ECDSA over RSA by default. ECDSA is in orders of magnitude cheaper than RSA.
-* Supports both RSA and ECDSA type certificates for each domain it serves.
-* Has ability to dynamically load SNI configuration. Currently it loads Hostname+Cert config from keystore every 30 mins.
+* SNI based TLS termination.
+* Supports both RSA and ECDSA certificates for each domain it serves.
+* Favors ECDSA over RSA if available by default. ECDSA is in orders of magnitude cheaper than RSA.
+* Has ability to hot-load SNI configuration. Currently it loads Hostname+Cert config from keystore every 30 mins.
 * Makes use of [httprouter](https://github.com/julienschmidt/httprouter) to proxy connections to backend.
-* Allows to define Routes using a flexible JSON map.
+* Allows to define SNI and proxy routing configuration using a flexible JSON map.
 * Supports TLS versions 1.0, 1.1 and 1.2
 
 ## Getting Started
@@ -34,16 +34,16 @@ Once installed, sillyproxy can be invoked by passing these parameters -
 
 SillyProxy reads certificates and keys from the keystore file. You can generate a keystore using the 'keystore' argument and following parameters - 
 
-* keystore - location of the keystore file. If this keystore does not exist, a new one is created.
+* keystore - location of the keystore file. If this keystore does not exist yet, a new one is created.
 * keypass - password to secure the keystore. Must match the previous password for an existing keystore
-* pemCert - location of the certificate file. PEM is only supported. Certificate types supported are RSA and ECDSA
-* pemKey - location of the corresponding private key file. PEM is only supported
+* pemCert - location of the certificate file. PEM format only supported. Certificate types supported are RSA and ECDSA
+* pemKey - location of the corresponding private key file. PEM format only supported
 * hostname - SNI alias against which this certificate needs to get associated
 
 A keystore can be used to store keys and certificates for multiple hostnames. Each host can have an ECDSA and an RSA certificate entry. Attempting to load a new certificate+pvtKey pair for an existing host+certType combination overwrites the existing entry. Please note that silly supports PEM format alone.
 
 ##### Default Alias
-Please note that Silly needs atleast one cert+pvtkey entry (ECDSA or RSA type) to be associated using a "default" alias. This default entry will be used to serve clients that do not support SNI extension or those with an unknown Hostname in SNI extension. If there is a primary domain that you want to serve using Silly, the primary domain's certificate is best suited as "Default" entry. You are free to load the same certificate under the "Default" alias and under an actual alias too.
+Please note that Silly needs atleast one cert+pvtkey entry (ECDSA or RSA type) associated using a "default" alias to run. This default entry will be used to serve clients that do not support SNI extension or those with an unknown Hostname in SNI extension. If there is a primary domain that you want to serve using Silly, the primary domain's certificate is best suited as "Default" entry. You are free to load the same certificate under the "Default" alias and under an actual alias too.
 
 ```
 ./sillyProxy -keystore myKeyStore.ks -pemCert certificatteFile -pemKey pvtKeyFile -keypass changeme -hostname myExternalDomainName KeyStore
