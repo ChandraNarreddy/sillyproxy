@@ -51,7 +51,7 @@ func loadCertMap(filePtr *string, password []byte,
 	}
 
 	for k, v := range keyStore {
-		certChain := v.(*keystore.PrivateKeyEntry).CertChain
+		certChain := v.(*keystore.PrivateKeyEntry).CertificateChain
 		var keyPEMBlock []byte
 		var keyDERBlock *pem.Block
 		cert := tls.Certificate{}
@@ -61,7 +61,7 @@ func loadCertMap(filePtr *string, password []byte,
 			for i := 0; i < len(certChain); i++ {
 				cert.Certificate = append(cert.Certificate, certChain[i].Content)
 			}
-			keyPEMBlock = v.(*keystore.PrivateKeyEntry).PrivKey
+			keyPEMBlock = v.(*keystore.PrivateKeyEntry).PrivateKey
 			keyDERBlock, _ = pem.Decode(keyPEMBlock)
 			cert.PrivateKey, err = parsePrivateKey(keyDERBlock.Bytes)
 			if err != nil {
