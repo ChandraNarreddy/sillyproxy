@@ -247,10 +247,10 @@ func populateKeyStore(keyStore *keystore.KeyStore, alias string,
 	}
 	(*keyStore)[alias] = &keystore.PrivateKeyEntry{
 		Entry: keystore.Entry{
-			CreationDate: time.Now(),
+			CreationTime: time.Now(),
 		},
-		PrivKey:   keyPEMBlock,
-		CertChain: certChain,
+		PrivateKey:       keyPEMBlock,
+		CertificateChain: certChain,
 	}
 	return nil
 }
