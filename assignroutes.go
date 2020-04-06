@@ -32,8 +32,8 @@ func assignRoutes(pHMap *proxyHanlderMap, routeMap *RouteMap) {
 			},
 			DisableKeepAlives:     false,
 			TLSHandshakeTimeout:   10 * time.Second,
-			ResponseHeaderTimeout: 10 * time.Second,
-			ExpectContinueTimeout: 1 * time.Second,
+			ResponseHeaderTimeout: 500 * time.Second,
+			ExpectContinueTimeout: 10 * time.Second,
 			MaxIdleConnsPerHost:   10,
 			MaxIdleConns:          100,
 		},
@@ -65,9 +65,8 @@ func assignRoutes(pHMap *proxyHanlderMap, routeMap *RouteMap) {
 						writeErrorResponse(w, http.StatusBadRequest)
 						return
 					}
-					/////debug////
-					//log.Printf("Route built is: %#v", route)
-					/////debug////
+					//now add the query params from the original request as is
+					route = route + "?" + r.URL.RawQuery
 
 					//create a new HTTP request
 					req, reqErr := http.NewRequest(localMap.Method, route, r.Body)
@@ -98,7 +97,11 @@ func assignRoutes(pHMap *proxyHanlderMap, routeMap *RouteMap) {
 					}
 					if writeResponse(w, resp) != nil {
 						writeErrorResponse(w, http.StatusInternalServerError)
+						resp.Body.Close()
+						return
 					}
+					resp.Body.Close()
+					return
 				})
 			//router.Handle ended
 		}
