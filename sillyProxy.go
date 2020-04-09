@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"reflect"
-	"runtime/pprof"
 	"syscall"
 	"time"
 	"unsafe"
@@ -83,7 +82,6 @@ func SillyProxy(keyStoreFile *string, keyStorePass *string,
 				clearOut(ECDSAdefault)
 				clearOut(RSAdefault)
 				log.Printf("\nReceived %#v, purged keystore secret and certificate map. Goodbye!\n", sigChannel)
-				pprof.StopCPUProfile()
 				os.Exit(1)
 			}
 		}
