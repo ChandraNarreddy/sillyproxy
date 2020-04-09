@@ -819,7 +819,7 @@ func TestSillyProxy(t *testing.T) {
 				testReq.Header.Add("Silly", "second value")
 				testResponse, testResponseErr := testClient.Do(testReq)
 				if testResponseErr != nil {
-					t.Errorf("\nTest Request failed: %#v", testResponseErr)
+					t.Errorf("\nTest Request failed: %#v", testResponseErr.Error())
 				}
 				if testResponse.StatusCode != testStatus {
 					t.Errorf("\nTest Request failed for %#v: %#v", testURI, testResponse)
