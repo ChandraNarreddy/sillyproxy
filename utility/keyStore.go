@@ -15,12 +15,16 @@ import (
 	"time"
 	"unsafe"
 
-	keystore "github.com/pavel-v-chernykh/keystore-go"
+	keystore "github.com/pavel-v-chernykh/keystore-go/v4"
+)
+
+const (
+	defaultHostname = "default"
 )
 
 // GenerateKeyStore generates the keyStore and saves it to disk. It requires
 // the keypass, keystore file, hostname for the cert and the certificate and
-// key details in PEM format
+// key file locations in PEM format
 
 // GenerateKeyStore generates the keyStore and saves it to disk.
 func GenerateKeyStore(keyStoreFile *string, hostname *string,
@@ -57,7 +61,7 @@ func GenerateKeyStore(keyStoreFile *string, hostname *string,
 			fmt.Printf("Aborting key entry. Try with hostname flag")
 			return fmt.Errorf("key entry aborted")
 		}
-		*hostname = "default"
+		*hostname = defaultHostname
 	}
 
 	keyStorePassBytes := []byte(*keyStorePass)
@@ -66,8 +70,9 @@ func GenerateKeyStore(keyStoreFile *string, hostname *string,
 	zeroString(keyStorePass)
 	defer zeroBytes(keyStorePassBytes)
 
-	var keyStore keystore.KeyStore
-	keyStore = make(keystore.KeyStore)
+	//var keyStore keystore.Keystore
+	//keyStore = make(keystore.KeyStore)
+	keyStore := keystore.New()
 
 	//load the pem files in a *tls.Certificate Type
 	cert, pemLoadError := tls.LoadX509KeyPair(*pemCertFile, *pemKeyFile)
@@ -96,7 +101,7 @@ func GenerateKeyStore(keyStoreFile *string, hostname *string,
 		log.Fatal(errors.New("unsupported public key algorithm"))
 	}
 
-	// check if the keystore location already exists
+	// check if the keystore already exists at the location
 	if fileExists(*keyStoreFile) {
 
 		//there is a bug with the below code. It will throw an error if the file
@@ -118,11 +123,11 @@ func GenerateKeyStore(keyStoreFile *string, hostname *string,
 			choice, _ := reader.ReadString('\n')
 			if choice[0] != 89 && choice[0] != 121 {
 				//fmt.Printf("Aborting key entry. Have a good day!\n")
-				return fmt.Errorf("Aborting key entry. Have a good day!!")
+				return fmt.Errorf("aborting key entry, have a good day")
 			}
 		}
 
-		if !(*hostname == "default") &&
+		if !(*hostname == defaultHostname) &&
 			!aliasExists(&keyStore, "default:RSA") &&
 			!aliasExists(&keyStore, "default:ECDSA") {
 			// Throw a warning to the user that the keystore does not yet have a "default"
@@ -140,7 +145,7 @@ func GenerateKeyStore(keyStoreFile *string, hostname *string,
 					"one cert type with default alias", alias)
 			}
 		}
-	} else if !(*hostname == "default") {
+	} else if !(*hostname == defaultHostname) {
 		//We know that the keystore does not exist yet. But the alias provided does
 		// is not "default". Warn the user that a default cert is absolutely
 		//necessary for SillyProxy to fire up.
@@ -159,13 +164,14 @@ func GenerateKeyStore(keyStoreFile *string, hostname *string,
 	}
 
 	//populate the keystore
-	populatekeyStoreErr := populateKeyStore(&keyStore, alias, *pemKeyFile, &cert)
+	populatekeyStoreErr := populateKeyStore(&keyStore, alias,
+		*pemKeyFile, &cert, keyStorePassBytes)
 	if populatekeyStoreErr != nil {
 		return fmt.Errorf("keyStore population failed with the error:" +
 			fmt.Sprintf("%v", populatekeyStoreErr))
 	}
 	//clearout the keystore and the cert files after usage
-	defer clearOut(keyStore[alias])
+	defer clearOut(&keyStore)
 	defer clearOut(&cert)
 
 	//write the keystore to file
@@ -210,7 +216,7 @@ func loadKeyStore(fileLocation string, password []byte,
 			fmt.Sprintf("%v", err))
 		return err
 	}
-	*keyStore, err = keystore.Decode(f, password)
+	err = keyStore.Load(f, password)
 	if err != nil {
 		err = errors.New("loadKeyStore failed with error: " +
 			fmt.Sprintf("%v", err))
@@ -227,16 +233,16 @@ func fileExists(fileLocation string) bool {
 }
 
 func aliasExists(keyStore *keystore.KeyStore, alias string) bool {
-	if _, exists := (*keyStore)[alias]; exists {
+	if exists := keyStore.IsPrivateKeyEntry(alias); exists {
 		return true
 	}
 	return false
 }
 
 func populateKeyStore(keyStore *keystore.KeyStore, alias string,
-	pemKeyFile string, cert *tls.Certificate) error {
-
-	certChain := make([]keystore.Certificate, len(cert.Certificate), len(cert.Certificate))
+	pemKeyFile string, cert *tls.Certificate, password []byte) error {
+	certChain := make([]keystore.Certificate, len(cert.Certificate),
+		len(cert.Certificate))
 	for i := 0; i < len(cert.Certificate); i++ {
 		certChain[i].Content = cert.Certificate[i]
 		certChain[i].Type = fmt.Sprintf("%dth Certificate in %s", i, alias)
@@ -245,12 +251,15 @@ func populateKeyStore(keyStore *keystore.KeyStore, alias string,
 	if keyReadError != nil {
 		return keyReadError
 	}
-	(*keyStore)[alias] = &keystore.PrivateKeyEntry{
-		Entry: keystore.Entry{
-			CreationTime: time.Now(),
-		},
+	privateKeyEntry := keystore.PrivateKeyEntry{
+		CreationTime:     time.Now(),
 		PrivateKey:       keyPEMBlock,
 		CertificateChain: certChain,
+	}
+	setPrivateKeyEntryErr := keyStore.SetPrivateKeyEntry(alias, privateKeyEntry,
+		password)
+	if setPrivateKeyEntryErr != nil {
+		return setPrivateKeyEntryErr
 	}
 	return nil
 }
@@ -262,6 +271,6 @@ func writeKeystore(keyStore *keystore.KeyStore, fileLocation string,
 		return err
 	}
 	defer o.Close()
-	err = keystore.Encode(o, *keyStore, password)
+	err = keyStore.Store(o, password)
 	return err
 }
