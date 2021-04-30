@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	keystore "github.com/pavel-v-chernykh/keystore-go"
+	keystore "github.com/pavel-v-chernykh/keystore-go/v4"
 )
 
 //certMap is a map of aliases and certificates in the form ("w.a.p:ECDSA",cert)
@@ -34,7 +34,7 @@ func loadCertMap(filePtr *string, password []byte,
 		err = errors.New("loadKeyStore failed with error: " + fmt.Sprintf("%v", err))
 		return err
 	}
-	keyStore, err := keystore.Decode(f, password)
+	keyStore, err := keyStore.Load(f, password)
 	if err != nil {
 		err = errors.New("loadKeyStore failed with error: " + fmt.Sprintf("%v", err))
 		return err
