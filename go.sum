@@ -1,5 +1,7 @@
 github.com/ChandraNarreddy/sillyproxy/utility v0.0.0-20210430083930-022b16ed6997 h1:4hz+oe+Ep+h5EXVbEafhTF4h1xlTVzckyDOthZgRhKQ=
 github.com/ChandraNarreddy/sillyproxy/utility v0.0.0-20210430083930-022b16ed6997/go.mod h1:Psfz5OgHEuFkGK3yxHuypl2X+krqd2ZW8od8LXdHoqw=
+github.com/ChandraNarreddy/sillyproxy/utility v0.0.0-20210430120824-b77059e6aaa8 h1:lsgDxUcc+VVzHmR4RTWij+IvlCceR/7zW4MaL0PnOsE=
+github.com/ChandraNarreddy/sillyproxy/utility v0.0.0-20210430120824-b77059e6aaa8/go.mod h1:Psfz5OgHEuFkGK3yxHuypl2X+krqd2ZW8od8LXdHoqw=
 github.com/julienschmidt/httprouter v1.3.0 h1:U0609e9tgbseu3rBINet9P48AI/D3oJs4dN7jwJOQ1U=
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
 github.com/pavel-v-chernykh/keystore-go/v4 v4.1.0 h1:xKxUVGoB9VJU+lgQLPN0KURjw+XCVVSpHfQEeyxk3zo=

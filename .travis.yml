@@ -1,8 +1,8 @@
 language: go
 go:
-  - 1.8
-  - 1.9
+  - 1.15
+  - 1.16
   - tip
 before_install:
   - go get github.com/julienschmidt/httprouter
-  - go get github.com/pavel-v-chernykh/keystore-go
+  - go get github.com/pavel-v-chernykh/keystore-go/v4
