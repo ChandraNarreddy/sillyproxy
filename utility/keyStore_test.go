@@ -1,12 +1,13 @@
 package utility
 
 import (
+	"crypto/tls"
 	"io/ioutil"
 	"log"
 	"os"
 	"testing"
 
-	keystore "github.com/pavel-v-chernykh/keystore-go"
+	keystore "github.com/pavel-v-chernykh/keystore-go/v4"
 )
 
 const (
@@ -168,7 +169,7 @@ var (
 	KeyStore      = "test.keystore"
 	alias_default = "default"
 	alias         = "localhost"
-	KeyStorePass  = "test"
+	KeyStorePass  = "test1234"
 )
 
 func TestGeneratekeyStore(t *testing.T) {
@@ -350,8 +351,7 @@ func TestGeneratekeyStore(t *testing.T) {
 
 func TestLoadKeyStore(t *testing.T) {
 
-	var keyStore keystore.KeyStore
-	keyStore = make(keystore.KeyStore)
+	keyStore := keystore.New()
 	pass := KeyStorePass
 	os.Remove(KeyStore)
 	GenerateKeyStore(&KeyStore, &alias_default, &ECDSA_Crt, &ECDSA_Key, &pass)
@@ -368,4 +368,16 @@ func TestLoadKeyStore(t *testing.T) {
 
 func TestPopulateKeyStore(t *testing.T) {
 
+	keyStore := keystore.New()
+	pass := KeyStorePass
+	os.Remove(KeyStore)
+	GenerateKeyStore(&KeyStore, &alias_default, &ECDSA_Crt, &ECDSA_Key, &pass)
+	cert, pemLoadError := tls.LoadX509KeyPair(ECDSA_Crt, ECDSA_Key)
+	if pemLoadError != nil {
+		log.Fatal(pemLoadError)
+	}
+	if populateKeyStore(&keyStore, alias_default,
+		ECDSA_Key, &cert, []byte(pass)) != nil {
+		t.Errorf("populateKeyStore() fail: Failed to populate keystore")
+	}
 }

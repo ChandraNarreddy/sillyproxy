@@ -66,7 +66,9 @@ func assignRoutes(pHMap *proxyHanlderMap, routeMap *RouteMap) {
 						return
 					}
 					//now add the query params from the original request as is
-					route = route + "?" + r.URL.RawQuery
+					if r.URL.RawQuery != "" {
+						route = route + "?" + r.URL.RawQuery
+					}
 
 					//create a new HTTP request
 					req, reqErr := http.NewRequest(localMap.Method, route, r.Body)
