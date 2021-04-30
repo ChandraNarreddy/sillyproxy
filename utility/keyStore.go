@@ -72,7 +72,7 @@ func GenerateKeyStore(keyStoreFile *string, hostname *string,
 
 	//var keyStore keystore.Keystore
 	//keyStore = make(keystore.KeyStore)
-	keyStore := keystore.New()
+	keyStore := keystore.New(keystore.WithCaseExactAliases())
 
 	//load the pem files in a *tls.Certificate Type
 	cert, pemLoadError := tls.LoadX509KeyPair(*pemCertFile, *pemKeyFile)
@@ -146,7 +146,7 @@ func GenerateKeyStore(keyStoreFile *string, hostname *string,
 			}
 		}
 	} else if !(*hostname == defaultHostname) {
-		//We know that the keystore does not exist yet. But the alias provided does
+		//We know that the keystore does not exist yet. But the alias provided
 		// is not "default". Warn the user that a default cert is absolutely
 		//necessary for SillyProxy to fire up.
 		reader := bufio.NewReader(os.Stdin)
@@ -158,7 +158,7 @@ func GenerateKeyStore(keyStoreFile *string, hostname *string,
 			alias = "default:" + certType
 		} else {
 			fmt.Printf("Sure, Continuing with %#v as the alias.\n"+
-				"But do remember that sillyProxy wont run unless "+
+				"But do remember that sillyProxy won't run unless "+
 				"one cert type with default alias is in the keystore", alias)
 		}
 	}

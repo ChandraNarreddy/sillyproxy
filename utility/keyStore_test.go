@@ -351,7 +351,7 @@ func TestGeneratekeyStore(t *testing.T) {
 
 func TestLoadKeyStore(t *testing.T) {
 
-	keyStore := keystore.New()
+	keyStore := keystore.New(keystore.WithCaseExactAliases())
 	pass := KeyStorePass
 	os.Remove(KeyStore)
 	GenerateKeyStore(&KeyStore, &alias_default, &ECDSA_Crt, &ECDSA_Key, &pass)
@@ -368,7 +368,7 @@ func TestLoadKeyStore(t *testing.T) {
 
 func TestPopulateKeyStore(t *testing.T) {
 
-	keyStore := keystore.New()
+	keyStore := keystore.New(keystore.WithCaseExactAliases())
 	pass := KeyStorePass
 	os.Remove(KeyStore)
 	GenerateKeyStore(&KeyStore, &alias_default, &ECDSA_Crt, &ECDSA_Key, &pass)
